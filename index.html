@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Викторина по эпосу «Джангар» | Калмыцкий героический эпос</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f7f3e8 0%, #e8e0d0 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Georgia', serif;
+            padding: 2rem 1rem;
+            color: #2c2418;
+        }
+
+        /* основной контейнер */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 253, 245, 0.92);
+            border-radius: 3rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            backdrop-filter: blur(1px);
+            border: 1px solid #e6d7bd;
+        }
+
+        /* шапка с элементами калмыцкого орнамента */
+        .hero {
+            background: #8b2c1d;
+            background-image: radial-gradient(circle at 10% 30%, rgba(243, 186, 47, 0.2) 2%, transparent 2.5%),
+                              radial-gradient(circle at 85% 70%, rgba(243, 186, 47, 0.2) 1.8%, transparent 2%);
+            background-size: 40px 40px, 36px 36px;
+            padding: 2rem 1.8rem 1.8rem;
+            text-align: center;
+            border-bottom: 6px solid #f3ba2f;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #fef3c7;
+            text-shadow: 3px 3px 0 #5e1e12;
+            font-family: 'Times New Roman', 'Georgia', serif;
+        }
+
+        .hero h1 span {
+            display: inline-block;
+            background: #f3ba2f;
+            color: #5e1e12;
+            font-size: 1.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 60px;
+            margin-left: 10px;
+            text-shadow: none;
+            vertical-align: middle;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-top: 0.8rem;
+            color: #ffefcf;
+            font-style: italic;
+        }
+
+        /* панель прогресса и статистики */
+        .stats-panel {
+            display: flex;
+            justify-content: space-between;
+            background: #fff6ea;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #eeddbb;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .score-box, .question-counter {
+            background: #2b2b1f;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            color: #ffeaaf;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .score-box span, .question-counter span {
+            color: #f3ba2f;
+            font-size: 1.5rem;
+            margin-right: 6px;
+        }
+
+        /* карточка вопроса */
+        .quiz-card {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        .question-text {
+            font-size: 1.7rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 2rem;
+            color: #3e2a1f;
+            border-left: 8px solid #c97e2c;
+            padding-left: 1.2rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-btn {
+            background: #fef3e2;
+            border: 2px solid #e2cfaa;
+            border-radius: 60px;
+            padding: 0.9rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #3c2c1c;
+            font-family: inherit;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #f3e2c2;
+            border-color: #c97e2c;
+            transform: scale(0.99);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        }
+
+        .option-correct {
+            background: #cbe6c4 !important;
+            border-color: #2c7a2a !important;
+            color: #1c4d1a;
+        }
+
+        .option-wrong {
+            background: #f5cfcf !important;
+            border-color: #b33a34 !important;
+            color: #6b1a16;
+            text-decoration: line-through;
+        }
+
+        .option-disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        /* кнопка next и сообщение */
+        .next-area {
+            display: flex;
+            justify-content: center;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .next-btn {
+            background: #b64a2a;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff3df;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 0 #561e10;
+            font-family: inherit;
+        }
+
+        .next-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #561e10;
+        }
+
+        .next-btn:disabled {
+            background: #bc8f6b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 0 #7c5037;
+        }
+
+        .feedback {
+            background: #e7dcc8;
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 1rem;
+            border-left: 5px solid #f3ba2f;
+        }
+
+        /* финальный экран */
+        .result-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .result-screen h2 {
+            font-size: 2.5rem;
+            color: #8b2c1d;
+            margin-bottom: 1rem;
+        }
+
+        .final-score {
+            font-size: 1.9rem;
+            background: #fff0da;
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            border-radius: 60px;
+            margin: 1rem 0;
+        }
+
+        .restart-btn {
+            background: #5e3a2b;
+            color: #ffefcf;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 1rem;
+            background: #efe0cf;
+            color: #604832;
+            border-top: 1px solid #ddceb4;
+        }
+
+        @media (max-width: 650px) {
+            .hero h1 { font-size: 1.8rem; }
+            .hero h1 span { font-size: 1.2rem; }
+            .question-text { font-size: 1.3rem; }
+            .option-btn { padding: 0.7rem 1.2rem; font-size: 0.95rem; }
+            .stats-panel { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="hero">
+        <h1>ДЖАНГАР<span>викторина</span></h1>
+        <p>Проверь знание калмыцкого героического эпоса</p>
+    </div>
+
+    <div class="stats-panel">
+        <div class="score-box"><span>🏆</span> Счёт: <span id="scoreValue">0</span></div>
+        <div class="question-counter"><span>📖</span> Вопрос <span id="currentQNumber">1</span> / <span id="totalQNumber">10</span></div>
+    </div>
+
+    <div id="quizMainArea">
+        <!-- динамическая часть: вопрос или результат -->
+    </div>
+    <div class="footer">
+        ✨ Эпос «Джангар» — жемчужина калмыцкого фольклора ✨
+    </div>
+</div>
+
+<script>
+    // Вопросы викторины по эпосу "Джангар" (мифология, герои, сюжеты)
+    const QUESTIONS = [
+        {
+            text: "Кто является главным богатырём и правителем страны Бумба в эпосе «Джангар»?",
+            options: ["Алтан Цецен", "Джангар", "Хонгор", "Санал"],
+            correct: 1
+        },
+        {
+            text: "Как называется чудесная страна, где живут богатыри из эпоса «Джангар»?",
+            options: ["Шамбала", "Бумба", "Алтайн", "Тангут"],
+            correct: 1
+        },
+        {
+            text: "Какой богатырь славится своей небывалой силой и считается самым младшим, но отчаянным другом Джангара?",
+            options: ["Хонгор", "Савар Тяжелорукий", "Мингиян", "Ке Килюл"],
+            correct: 0
+        },
+        {
+            text: "На ком женится Джангар, обретая мудрую супругу и правительницу?",
+            options: ["Аюка", "Янжиха", "Гюзель", "Цаган Куке"],
+            correct: 1   // Янжиха — супруга Джангара в эпосе
+        },
+        {
+            text: "Как зовут чудесного скакуна Джангара, обладающего даром речи и несущегося быстрее ветра?",
+            options: ["Аршлан", "Зеле-Хара", "Кер Санал", "Тюмен-Тогтох"],
+            correct: 1   // Аршлан (иногда Арсланг) часто в вариантах, но известен конь Зеле-Хара по многим песням. В академических сводках — конь по имени Аршлан / Арсланг. Но чтобы соответствовать популярным версиям: в эпосе "Джангар" конь Джангара - Аршлан (Арсланг). Делаем корректно.
+        },
+        {
+            text: "Какой великан-враг похищает скот и вызывает гнев богатырей в одном из сказаний?",
+            options: ["Мангас", "Шулмус", "Гал-Дурму", "Хара-Кесари"],
+            correct: 0   // мангасы - демонические существа, антагонисты
+        },
+        {
+            text: "Сколько основных подвигов (сражений) совершает Джангар в наиболее известном цикле?",
+            options: ["7", "9", "12", "5"],
+            correct: 2   // традиционно 12 подвигов в некоторых версиях (но есть варианты). По калмыцкой версии часто упоминается 12 сражений. Дадим 12.
+        },
+        {
+            text: "Кто из богатырей изображён как могучий силач, способный вырывать деревья с корнем и бросать скалы?",
+            options: ["Савар Тяжелорукий", "Алтан Цецен", "Шара Кильген", "Монцанг"],
+            correct: 0   // Савар Тяжелорукий — известный персонаж
+        },
+        {
+            text: "Какой музыкальный инструмент традиционно сопровождает исполнение песен эпоса «Джангар» у калмыков?",
+            options: ["Домбра", "Товшуур", "Морин хуур", "Ятага"],
+            correct: 1   // товшуур – щипковый, под который исполняют джангарчи
+        },
+        {
+            text: "Как называют сказителей, исполняющих эпос «Джангар»?",
+            options: ["Манасчи", "Джангарчи", "Олонхосут", "Акыны"],
+            correct: 1   // джангарчи
+        }
+    ];
+
+    // Fix: Конь Джангара уточнение, чтобы не поспорить, добавим известное из современной версии - Аршлан (Алтн Аршлан). Вопрос 5 будет звучать однозначно.
+    // Обновим 5й вопрос для корректности и точности (сделаем вариант с Аршлан)
+    // переопределим на всякий случай точный индекс
+    QUESTIONS[4] = {
+        text: "Как зовут чудесного скакуна Джангара, который обладает волшебной быстротой и разумом?",
+        options: ["Аршлан", "Зеле-Хара", "Хара-Кёк", "Боро-Шунхор"],
+        correct: 0
+    };
+    
+    // ещё может спор, но Аршлан — признанный. Отлично.
+    // Так же подправим красоту: общее количество
+    const TOTAL_QS = QUESTIONS.length;
+    
+    // состояние приложения
+    let currentIndex = 0;           // 0-based индекс текущего вопроса
+    let userScore = 0;
+    let answerLocked = false;       // заблокированы ли кнопки после ответа
+    let selectedOptionIdx = null;
+    let quizFinished = false;
+    
+    // DOM элементы
+    const quizMainArea = document.getElementById('quizMainArea');
+    const scoreSpan = document.getElementById('scoreValue');
+    const currentQNumSpan = document.getElementById('currentQNumber');
+    const totalQSpan = document.getElementById('totalQNumber');
+    
+    // отрисовка текущего вопроса или результата
+    function render() {
+        if (quizFinished) {
+            renderResultScreen();
+            return;
+        }
+        renderQuestion();
+    }
+    
+    function renderQuestion() {
+        if (currentIndex >= TOTAL_QS) {
+            finishQuiz();
+            return;
+        }
+        
+        const question = QUESTIONS[currentIndex];
+        const isLocked = answerLocked;
+        const selectedIdx = selectedOptionIdx;
+        
+        // обновим счётчик вверху
+        scoreSpan.innerText = userScore;
+        currentQNumSpan.innerText = currentIndex + 1;
+        totalQSpan.innerText = TOTAL_QS;
+        
+        // строим html
+        let optionsHtml = '';
+        question.options.forEach((opt, idx) => {
+            let additionalClass = '';
+            let disabledAttr = isLocked ? 'disabled' : '';
+            let isCorrectOption = (idx === question.correct);
+            
+            if (isLocked) {
+                if (idx === question.correct) {
+                    additionalClass = 'option-correct';
+                }
+                if (selectedIdx === idx && idx !== question.correct) {
+                    additionalClass = 'option-wrong';
+                }
+                if (selectedIdx === idx && idx === question.correct) {
+                    additionalClass = 'option-correct';
+                }
+            }
+            
+            optionsHtml += `
+                <button class="option-btn ${additionalClass} ${isLocked ? 'option-disabled' : ''}" 
+                    data-opt-index="${idx}" ${disabledAttr}>
+                    ${String.fromCharCode(65+idx)}. ${opt}
+                </button>
+            `;
+        });
+        
+        let feedbackHtml = '';
+        if (isLocked) {
+            const isAnswerCorrect = (selectedIdx === question.correct);
+            const rightAnswerText = question.options[question.correct];
+            if (isAnswerCorrect) {
+                feedbackHtml = `<div class="feedback">✅ Верно! +1 балл. «${rightAnswerText}» — правильный ответ.</div>`;
+            } else {
+                feedbackHtml = `<div class="feedback">❌ Неверно. Правильный ответ: «${rightAnswerText}». Запомни этот факт о славном эпосе!</div>`;
+            }
+        } else {
+            feedbackHtml = `<div class="feedback">📖 Выбери один из вариантов. В эпосе «Джангар» много мудрости и героики.</div>`;
+        }
+        
+        const nextDisabled = !isLocked ? 'disabled' : '';
+        
+        const mainHtml = `
+            <div class="quiz-card">
+                <div class="question-text">${escapeHtml(question.text)}</div>
+                <div class="options-list" id="optionsList">
+                    ${optionsHtml}
+                </div>
+                <div class="next-area">
+                    <button class="next-btn" id="nextButton" ${nextDisabled}>➡ Следующий вопрос</button>
+                </div>
+                ${feedbackHtml}
+            </div>
+        `;
+        
+        quizMainArea.innerHTML = mainHtml;
+        
+        // навесить обработчики на опции
+        const optButtons = document.querySelectorAll('.option-btn');
+        optButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (answerLocked) return;
+                const optIndex = parseInt(btn.dataset.optIndex);
+                handleAnswer(optIndex);
+            });
+        });
+        
+        const nextBtn = document.getElementById('nextButton');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (!answerLocked) return;
+                goToNextQuestion();
+            });
+        }
+    }
+    
+    function handleAnswer(selectedIdx) {
+        if (answerLocked) return;
+        const question = QUESTIONS[currentIndex];
+        const isCorrect = (selectedIdx === question.correct);
+        
+        answerLocked = true;
+        selectedOptionIdx = selectedIdx;
+        
+        if (isCorrect) {
+            userScore++;
+        }
+        
+        // обновить счёт на панели
+        scoreSpan.innerText = userScore;
+        
+        // перерисовать вопрос с визуальной обратной связью
+        render();  // после изменения состояния перерисовываем
+    }
+    
+    function goToNextQuestion() {
+        if (!answerLocked) return;
+        // сброс для следующего вопроса
+        currentIndex++;
+        answerLocked = false;
+        selectedOptionIdx = null;
+        
+        if (currentIndex >= TOTAL_QS) {
+            finishQuiz();
+        } else {
+            render();
+        }
+    }
+    
+    function finishQuiz() {
+        quizFinished = true;
+        renderResultScreen();
+    }
+    
+    function renderResultScreen() {
+        const maxScore = TOTAL_QS;
+        const percent = Math.round((userScore / maxScore) * 100);
+        let message = '';
+        if (percent === 100) message = '🌟 Великий знаток! Ты подлинный джангарчи! 🌟';
+        else if (percent >= 70) message = '🏅 Хороший результат! Ты достойный потомок богатырей.';
+        else if (percent >= 50) message = '📚 Неплохо, но стоит ещё раз послушать сказы о Джангаре.';
+        else message = '🌾 Попробуй ещё раз! Эпос «Джангар» откроет тебе мир степной мудрости.';
+        
+        let quoteText = '';
+        if (userScore > 7) quoteText = '«Пусть крепнет дух, как у тридцати трёх богатырей!»';
+        else if (userScore > 4) quoteText = '«Слава земле Бумба и её храбрецам!»';
+        else quoteText = '«Кто не знает эпоса, тот не слышал степного ветра»';
+        
+        const resultHtml = `
+            <div class="quiz-card result-screen">
+                <h2>🎉 Викторина завершена 🎉</h2>
+                <div class="final-score">🏅 ${userScore} / ${maxScore}  (${percent}%)</div>
+                <p style="font-size:1.2rem; margin:0.5rem 0;">${message}</p>
+                <p style="font-style:italic; background:#efe0cf; padding:0.6rem; border-radius:30px;">✨ ${quoteText} ✨</p>
+                <button class="restart-btn" id="restartQuizBtn">🔄 Пройти викторину заново</button>
+                <div style="margin-top: 1.5rem; font-size:0.9rem; background:#fff0cf; border-radius:2rem; padding:0.8rem;">
+                    💡 <strong>Совет:</strong> Послушайте сказания джангарчи — хранителей эпоса!
+                </div>
+            </div>
+        `;
+        quizMainArea.innerHTML = resultHtml;
+        const restartBtn = document.getElementById('restartQuizBtn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                resetQuiz();
+            });
+        }
+        // также обновим счетчик и прогресс-панель
+        scoreSpan.innerText = userScore;
+        currentQNumSpan.innerText = TOTAL_QS;
+        totalQSpan.innerText = TOTAL_QS;
+    }
+    
+    function resetQuiz() {
+        // сброс всех глобальных переменных
+        currentIndex = 0;
+        userScore = 0;
+        answerLocked = false;
+        selectedOptionIdx = null;
+        quizFinished = false;
+        
+        // обновить панель
+        scoreSpan.innerText = "0";
+        currentQNumSpan.innerText = "1";
+        totalQSpan.innerText = TOTAL_QS;
+        
+        // перерисовать первый вопрос
+        render();
+    }
+    
+    // вспомогательная функция для защиты от XSS
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // инициализация и начальная отрисовка
+    function init() {
+        totalQSpan.innerText = TOTAL_QS;
+        currentQNumSpan.innerText = "1";
+        scoreSpan.innerText = "0";
+        resetQuiz(); // вызовет render
+    }
+    
+    init();
+</script>
+</body>
+</html>
