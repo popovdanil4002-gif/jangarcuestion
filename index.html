@@ -258,15 +258,15 @@
     </div>
 
     <div class="stats-panel">
-        <div class="score-box"><span>🏆</span> Счёт: <span id="scoreValue">0</span></div>
-        <div class="question-counter"><span>📖</span> Вопрос <span id="currentQNumber">1</span> / <span id="totalQNumber">10</span></div>
+        <div class="score-box"><span></span> Счёт: <span id="scoreValue">0</span></div>
+        <div class="question-counter"><span></span> Вопрос <span id="currentQNumber">1</span> / <span id="totalQNumber">10</span></div>
     </div>
 
     <div id="quizMainArea">
         <!-- динамическая часть: вопрос или результат -->
     </div>
     <div class="footer">
-        ✨ Эпос «Джангар» — жемчужина калмыцкого фольклора ✨
+         Эпос «Джангар» — жемчужина калмыцкого фольклора 
     </div>
 </div>
 
@@ -296,7 +296,7 @@
         {
             text: "Как зовут чудесного скакуна Джангара, обладающего даром речи и несущегося быстрее ветра?",
             options: ["Аршлан", "Аранзал", "Кер Санал", "Тюмен-Тогтох"],
-            correct: 1   // Аршлан (иногда Арсланг) часто в вариантах, но известен конь Зеле-Хара по многим песням. В академических сводках — конь по имени Аршлан / Арсланг. Но чтобы соответствовать популярным версиям: в эпосе "Джангар" конь Джангара - Аршлан (Арсланг). Делаем корректно.
+            correct: 1   //  Арсланг часто в вариантах, но известен конь Зеле-Хара по многим песням. В академических сводках — конь по имени Аршлан / Арсланг. Но чтобы соответствовать популярным версиям: в эпосе "Джангар" конь Джангара - Аршлан (Арсланг). Делаем корректно.
         },
         {
             text: "Какой великан-враг похищает скот и вызывает гнев богатырей в одном из сказаний?",
@@ -316,7 +316,7 @@
         {
             text: "Какой музыкальный инструмент традиционно сопровождает исполнение песен эпоса «Джангар» у калмыков?",
             options: ["Домбра", "Товшуур", "Морин хуур", "Ятага"],
-            correct: 0   // товшуур – щипковый, под который исполняют джангарчи
+            correct: 0   // Домбра – инструмент под который исполняют джангарчи
         },
         {
             text: "Как называют сказителей, исполняющих эпос «Джангар»?",
@@ -505,13 +505,13 @@
         
         const resultHtml = `
             <div class="quiz-card result-screen">
-                <h2>🎉 Викторина завершена </h2>
+                <h2> Викторина завершена </h2>
                 <div class="final-score"> ${userScore} / ${maxScore}  (${percent}%)</div>
                 <p style="font-size:1.2rem; margin:0.5rem 0;">${message}</p>
-                <p style="font-style:italic; background:#efe0cf; padding:0.6rem; border-radius:30px;">✨ ${quoteText} ✨</p>
-                <button class="restart-btn" id="restartQuizBtn">🔄 Пройти викторину заново</button>
+                <p style="font-style:italic; background:#efe0cf; padding:0.6rem; border-radius:30px;"> ${quoteText} </p>
+                <button class="restart-btn" id="restartQuizBtn"> Пройти викторину заново</button>
                 <div style="margin-top: 1.5rem; font-size:0.9rem; background:#fff0cf; border-radius:2rem; padding:0.8rem;">
-                    💡 <strong>Совет:</strong> Послушайте сказания джангарчи — хранителей эпоса!
+                     <strong>Совет:</strong> Послушайте сказания джангарчи — хранителей эпоса!
                 </div>
             </div>
         `;
